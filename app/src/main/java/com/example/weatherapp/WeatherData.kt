@@ -12,7 +12,9 @@ data class WeatherData(
     @SerializedName("weather")
     val weather: List<Weather>? = null,
     @SerializedName("wind")
-    val wind: Wind? = null
+    val wind: Wind? = null,
+    @SerializedName("dt")
+    val dt: Int? = null
 )
 
 data class Main(
@@ -24,7 +26,7 @@ data class Main(
     val temp: Double? = null,
     @SerializedName("temp_max")
     val temp_max: Double? = null,
-    @SerializedName("temp_main")
+    @SerializedName("temp_min")
     val temp_min: Double? = null
 )
 

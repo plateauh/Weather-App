@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface APIInterface {
 
-    @GET("weather?q=riyadh&units=metric&appid=1208d1ac3ff4cde691b004629f79b8c2")
+    @GET("data/2.5/weather?q=riyadh&units=metric&appid=1208d1ac3ff4cde691b004629f79b8c2")
     fun doGetListResources(): Call<WeatherData?>?
 }
