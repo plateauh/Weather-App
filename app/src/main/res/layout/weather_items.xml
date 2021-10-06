@@ -234,6 +234,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/refresh_card"
             android:layout_width="95dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"

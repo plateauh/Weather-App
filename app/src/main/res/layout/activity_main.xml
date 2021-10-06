@@ -35,7 +35,7 @@
         android:id="@+id/status_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="32dp"
         android:text="status"
         android:textColor="@color/white"
         android:textSize="20sp"
