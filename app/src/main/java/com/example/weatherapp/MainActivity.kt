@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
             "humidity" to findViewById(R.id.humidity_tv),
         )
         refreshCard = findViewById(R.id.refresh_card)
-        textViewsMap["city"]!!.text = "Riyadh, SA"
+//        how to set text
+//        textViewsMap["city"]!!.text = "Riyadh, SA"
         refreshCard.setOnClickListener {
             // refresh
         }
