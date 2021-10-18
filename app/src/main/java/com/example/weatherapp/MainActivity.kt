@@ -13,12 +13,14 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 lateinit var textViewsMap: MutableMap<String, TextView>
 lateinit var refreshCard: CardView
-var weatherData: WeatherData? = WeatherData()
+lateinit var weatherData: WeatherData
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("WrongViewCast")
@@ -38,46 +40,43 @@ class MainActivity : AppCompatActivity() {
             "pressure" to findViewById(R.id.pressure_tv),
             "humidity" to findViewById(R.id.humidity_tv)
         )
-        setData(textViewsMap)
+
+        CoroutineScope(IO).launch {
+            setWeather()
+        }
+
         refreshCard = findViewById(R.id.refresh_card)
         refreshCard.setOnClickListener {
-             setData(textViewsMap)
+            CoroutineScope(IO).launch {
+                setWeather()
+            }
         }
     }
 
-    private fun setWeather() {
+    private suspend fun setWeather() {
         val apiInterface = APIClient().getClient()?.create(APIInterface::class.java)
         val call: Call<WeatherData?>? = apiInterface!!.doGetListResources()
-        call?.enqueue(object : Callback<WeatherData?> {
-            override fun onResponse(call: Call<WeatherData?>?, response: Response<WeatherData?>) {
-                weatherData = response.body()
-            }
-            override fun onFailure(call: Call<WeatherData?>, t: Throwable) {
-                call.cancel()
-            }
-        })
+        try {
+            weatherData = call?.execute()?.body()!!
+            setData()
+        } catch (e: Exception){ e.printStackTrace() }
     }
 
-    private fun setData(textViewsMap: MutableMap<String, TextView>){
-        CoroutineScope(IO).launch {
-            setWeather()
+    private suspend fun setData() {
+
             withContext(Main) {
-                val offset = TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
                 textViewsMap["city"]!!.text = "${weatherData?.name}, ${weatherData?.sys?.country}"
-                textViewsMap["date and time"]!!.text = "Updated at: ${weatherData?.dt?.minus(offset)}"
-                textViewsMap["status"]!!.text = "${weatherData?.weather?.get(0)?.description}"
+                textViewsMap["date and time"]!!.text = "Updated at: ${weatherData?.dt}"
+                textViewsMap["status"]!!.text = weatherData?.weather?.get(0)?.description.toString()
                 textViewsMap["temperature"]!!.text = "${weatherData?.main?.temp?.toInt()}°C"
                 textViewsMap["low"]!!.text = "Low: ${weatherData?.main?.temp_min?.toInt()}°C"
                 textViewsMap["high"]!!.text = "High: ${weatherData?.main?.temp_max?.toInt()}°C"
-                textViewsMap["sunrise"]!!.text = "${weatherData?.sys?.sunrise?.minus(offset)}"
-                textViewsMap["sunset"]!!.text = "${weatherData?.sys?.sunset?.minus(offset)}"
-                textViewsMap["wind"]!!.text = "${weatherData?.wind?.speed}"
-                textViewsMap["pressure"]!!.text = "${weatherData?.main?.pressure}"
-                textViewsMap["humidity"]!!.text = "${weatherData?.main?.humidity}"
+                textViewsMap["sunrise"]!!.text = weatherData?.sys?.sunrise.toString()
+                textViewsMap["sunset"]!!.text = weatherData?.sys?.sunset.toString()
+                textViewsMap["wind"]!!.text = weatherData?.wind?.speed?.toString()
+                textViewsMap["pressure"]!!.text = weatherData?.main?.pressure.toString()
+                textViewsMap["humidity"]!!.text = weatherData?.main?.humidity.toString()
             }
-        }
     }
-
-
 }
 

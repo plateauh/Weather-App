@@ -14,7 +14,7 @@ data class WeatherData(
     @SerializedName("wind")
     val wind: Wind? = null,
     @SerializedName("dt")
-    val dt: Int? = null
+    val dt: Long? = null
 )
 
 data class Main(
@@ -34,9 +34,9 @@ data class Sys(
     @SerializedName("country")
     val country: String? = null,
     @SerializedName("sunrise")
-    val sunrise: Int? = null,
+    val sunrise: Long? = null,
     @SerializedName("sunset")
-    val sunset: Int? = null,
+    val sunset: Long? = null,
 )
 
 data class Weather(
